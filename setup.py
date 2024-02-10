@@ -245,7 +245,7 @@ class BuildConfig (Command):
             'libmypaint_locale_dir': self.get_libmypaint_locale_dir(),
             'supported_locales': locstring,
         }
-        self.instantiate_template('config.py.in', 'src/lib/config.py', conf_vars)
+        self.instantiate_template('src/config.py.in', 'src/lib/config.py', conf_vars)
 
     def get_libmypaint_locale_dir(self):
         path = self.libmypaint_locale_path
@@ -506,9 +506,9 @@ class Install (install):
         # lib.config is a module generated as part of the build process,
         # and may not exist when the setup script is run,
         # hence it should not (and often cannot) be a top-level import.
-        import lib.config
+        import src.lib.config
         # We only install the locales added in the build_config step.
-        locales = lib.config.supported_locales
+        locales = src.lib.config.supported_locales
         data_paths = BuildTranslations.get_translation_paths(self, locales)[1]
         self.distribution.data_files.extend(data_paths)
         install.run(self)
@@ -640,8 +640,8 @@ class InstallScripts (install_scripts):
             self.run_command('build_scripts')
 
         sys.path.insert(0, ".")
-        import lib.meta
-        relinfo_script = lib.meta._get_release_info_script(gitprefix="git")
+        import src.lib.meta
+        relinfo_script = src.lib.meta._get_release_info_script(gitprefix="git")
 
         header_tmpl = textwrap.dedent("""
             #
@@ -969,7 +969,7 @@ def get_ext_modules():
     mypaintlib_swig_opts.extend(['-DNO_TESTS'])
 
     mypaintlib = Extension(
-        'lib._mypaintlib',
+        'src.lib._mypaintlib',
         [
             'src/lib/mypaintlib.i',
             'src/lib/gdkpixbuf2numpy.cpp',
@@ -1032,7 +1032,7 @@ setup(
     license="GPLv2+",
     url="http://mypaint.org",
 
-    packages=['lib', 'lib.layer', 'gui', 'gui.colors'],
+    packages=['src.lib', 'src.lib.layer', 'src.gui', 'src.gui.colors'],
     package_data={
         "gui": ['*.xml', '*.glade'],
     },
