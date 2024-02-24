@@ -4,4 +4,4 @@ project('MyPaint', 'cpp',
 
 fs = import('fs')
 
-install_subdir('gui', install_dir : 'mypaint')
+install_subdir('src/gui', install_dir : 'mypaint')
