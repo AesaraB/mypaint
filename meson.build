@@ -2,6 +2,6 @@ project('MyPaint', 'cpp',
   version : 'v2.1.0',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
 
-executable('mypaint',
-           'mypaint.py',
-           install : true)
+fs = import('fs')
+
+install_subdir('gui', install_dir : 'mypaint')
