@@ -2,6 +2,9 @@ project('MyPaint', 'cpp',
   version : 'v2.1.0',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
 
+# Build machine info
+system_os = system()
+
 # Modules
 ## Python
 py_mod = import('python')
@@ -25,27 +28,69 @@ glib_dep = dependency('glib-2.0')
 gobject_dep = dependency('gobject-2.0')
 pygobject_dep = dependency('pygobject-3.0')
 
-# Compile
-## Flags
-# '--std=c++11',
-# '-Wall',
-# '-Wno-sign-compare',
-# '-Wno-write-strings',
-# '-D_POSIX_C_SOURCE=200809L',
-# 're building against shared libmypaint now
-# '-g',  # always include symbols, for profiling
+# Build
+## Swig
+### Define swig
+swig = find_program('swig', required: true)
 
-### Platform Flags
-# if sys.platform == "darwin":
-#   extra_compile_args.append('-D_DARWIN_C_SOURCE')
-# elif sys.platform == "win32":
-#   pass
-# elif sys.platform == "msys":
-#   pass
-# elif sys.platform.startswith("linux") or "bsd" in sys.platform:
-#   # Look up libraries dependencies relative to the library.
-#   extra_link_args.append('-Wl,-z,origin')
-#   extra_link_args.append('-Wl,-rpath,$ORIGIN')
+### Define flags
+swig_args = [ '--std=c++11',
+  '-Wall',
+  '-Wno-sign-compare',
+  '-Wno-write-strings',
+  '-D_POSIX_C_SOURCE=200809L',
+  '-DNO_TESTS',  # FIXME: we're building against shared libmypaint now
+  '-g',  # always include symbols, for profiling
+  ]
+
+if system_os == "darwin"
+  swig_sys_args = '-D_DARWIN_C_SOURCE'
+elif system_os == "linux" or system_os == "freebsd"
+  # Look up libraries dependencies relative to the library.
+  swig_sys_args = ['-Wl,-z,origin']
+  swig_sys_args = ['-Wl,-rpath,$ORIGIN']
+endif
+
+### Run swig
+r = run_command(swig, ['-version'], check: true) # Returns: "\nSWIG Version 4.1.1\n\nCompiled with ..."
+swig_version = r.stdout().split('\n')[1].split()[2].strip()
+if swig_version.version_compare('<4.1.0')
+  swig_cmd = [swig, '-python', '-py3', '-o', '@OUTPUT1@', '@INPUT0@']
+else
+  swig_cmd = [swig, '-python', '-o', '@OUTPUT1@', '@INPUT0@']
+endif
+
+mypaintlib_swig = custom_target(
+  'mypaintlib.py',
+  input: ['lib/mypaintlib.i',
+    'lib/gdkpixbuf2numpy.cpp',
+    'lib/pixops.cpp',
+    'lib/fastpng.cpp',
+    'lib/brushsettings.cpp',
+    'lib/fill/fill_common.cpp',
+    'lib/fill/fill_constants.cpp',
+    'lib/fill/floodfill.cpp',
+    'lib/fill/gap_closing_fill.cpp',
+    'lib/fill/gap_detection.cpp',
+    'lib/fill/blur.cpp',
+    'lib/fill/morphology.cpp'
+  ],
+  output:  ['mypaintlib.py', 'lib/mypaintlib_wrap.cpp'],
+  command: swig_cmd,
+  install: true,
+  install_dir: [python3.get_install_dir(pure: false, subdir: 'libnvme'), false],
+  )
+
+mypaintlib_clib = python3.extension_module(
+  '_mypaintlib',
+  mypaintlibb_swig[1],
+  dependencies : [py3_dep],
+  include_directories: [incdir, internal_incdir],
+  link_with: [libccan],
+  install: true,
+  subdir: 'libnvme',
+  )
+
 
 ### Swig Flags
 # mypaintlib_swig_opts = ['-Wall', '-noproxydel', '-c++']
@@ -57,18 +102,6 @@ pygobject_dep = dependency('pygobject-3.0')
 # mypaintlib_swig_opts.extend(['-DNO_TESTS'])
 
 ## Extensions
-# 'lib/mypaintlib.i',
-# 'lib/gdkpixbuf2numpy.cpp',
-# 'lib/pixops.cpp',
-# 'lib/fastpng.cpp',
-# 'lib/brushsettings.cpp',
-# 'lib/fill/fill_common.cpp',
-# 'lib/fill/fill_constants.cpp',
-# 'lib/fill/floodfill.cpp',
-# 'lib/fill/gap_closing_fill.cpp',
-# 'lib/fill/gap_detection.cpp',
-# 'lib/fill/blur.cpp',
-# 'lib/fill/morphology.cpp',
 
 ## Options
 # swig_opts=mypaintlib_swig_opts,
