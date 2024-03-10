@@ -3,7 +3,7 @@ project('MyPaint', 'cpp',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
 
 # Build machine info
-system_os = system()
+system_os = host_machine.system()
 
 # Modules
 ## Python
@@ -78,13 +78,13 @@ mypaintlib_swig = custom_target(
   output:  ['mypaintlib.py', 'lib/mypaintlib_wrap.cpp'],
   command: swig_cmd,
   install: true,
-  install_dir: [python3.get_install_dir(pure: false, subdir: 'libnvme'), false],
+  install_dir: [py.get_install_dir(pure: false, subdir: 'libnvme'), false],
   )
 
-mypaintlib_clib = python3.extension_module(
+mypaintlib_clib = py.extension_module(
   '_mypaintlib',
-  mypaintlibb_swig[1],
-  dependencies : [py3_dep],
+  mypaintlib_swig[1],
+  dependencies : [python_dep],
   include_directories: [incdir, internal_incdir],
   link_with: [libccan],
   install: true,
