@@ -1,3 +1,13 @@
+# This file is part of MyPaint.
+# Copyright (C) 2024 the MyPaint project
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# /meson.build
+
 project('MyPaint', 'cpp',
   version : 'v2.1.0',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
@@ -29,9 +39,8 @@ gobject_dep = dependency('gobject-2.0')
 pygobject_dep = dependency('pygobject-3.0')
 
 # Build
-
-# Swig
-subdir('src/lib')
+subdir('src') # config.py.in
+#subdir('src/lib') # Swig
 ## Extensions
 
 ## Options
@@ -39,4 +48,4 @@ subdir('src/lib')
 # **mypaintlib_opts
 
 # Install
-install_subdir('src/gui', install_dir : 'mypaint')
+#install_subdir('src/gui', install_dir : 'mypaint')
