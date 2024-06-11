@@ -8,15 +8,17 @@
 
 # /src/meson.build
 
-brushlib_ver = brushlib_dep.version()
+brushes_dir = brushes_dep.get_pkgconfig_variable('brushesdir')
+brushlib_ver = brushlib_dep.name()
 
 conf = configuration_data()
-conf.set('mypaint_brushdir', 'brushdir')
-conf.set('libmypaint_version', brushlib_ver)
+conf.set('brushes_dir', brushes_dir)
+conf.set('brushlib_ver', brushlib_ver)
 conf.set('libmypaint_locale_dir', 'self.get_libmypaint_locale_dir()')
 conf.set('supported_locales', 'locstring')
 
 configure_file(
   input : 'config.py.in',
   output : 'config.py',
+  encoding : 'utf-8',
   configuration : conf)

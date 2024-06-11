@@ -25,7 +25,7 @@ py = py_mod.find_installation('python3', modules: py_deps)
 python_dep = py.dependency()
 ## First party dependencies
 brushlib_dep = dependency('libmypaint-2.0')
-brush_dep = dependency('mypaint-brushes-2.0')
+brushes_dep = dependency('mypaint-brushes-2.0')
 
 ## Third party dependencies
 cairo_dep = dependency('cairo', version: '>=1.4')
