@@ -53,6 +53,7 @@ configure_file(
   encoding : 'utf-8',
   input : 'src/config.py.in',
   output : 'config.py',
+  install_dir : 'lib/mypaint/lib',
   configuration : conf)
 
 # Build
