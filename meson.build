@@ -21,6 +21,9 @@ py_mod = import('python')
 py_deps = ['cairo','gettext','gi','numpy']
 py = py_mod.find_installation('python3', modules: py_deps)
 
+## Filesystem
+fs = import('fs')
+
 # Dependencies
 python_dep = py.dependency()
 ## First party dependencies
@@ -39,22 +42,8 @@ glib_dep = dependency('glib-2.0')
 gobject_dep = dependency('gobject-2.0')
 pygobject_dep = dependency('pygobject-3.0')
 
-# Configure config.py
-brushes_dir = brushes_dep.get_pkgconfig_variable('brushesdir')
-brushlib_ver = brushlib_dep.name()
 
-conf = configuration_data()
-conf.set('brushes_dir', brushes_dir)
-conf.set('brushlib_ver', brushlib_ver)
-conf.set('libmypaint_locale_dir', 'self.get_libmypaint_locale_dir()')
-conf.set('supported_locales', 'locstring')
-
-configure_file(
-  encoding : 'utf-8',
-  input : 'src/config.py.in',
-  output : 'config.py',
-  install_dir : 'lib/mypaint/lib',
-  configuration : conf)
+subdir('src') # Configure
 
 # Setup python
 install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true)
