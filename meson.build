@@ -56,6 +56,10 @@ configure_file(
   install_dir : 'lib/mypaint/lib',
   configuration : conf)
 
+# Setup python
+install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true)
+install_subdir('src/lib/python', install_dir : 'lib/mypaint/lib', strip_directory : true)
+
 # Build
 #subdir('src/lib') # Swig
 ## Extensions
