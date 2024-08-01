@@ -31,6 +31,7 @@ brushes_dep = dependency('mypaint-brushes-2.0')
 cairo_dep = dependency('cairo', version: '>=1.4')
 lcms2_dep = dependency('lcms2')
 libpng_dep = dependency('libpng')
+librsvg_dep = dependency('librsvg-2.0')
 json_dep = dependency('json-c')
 ### GTK
 gtk_dep = dependency('gtk+-3.0', version: '>=3.12')
