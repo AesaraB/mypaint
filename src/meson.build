@@ -11,7 +11,7 @@
 # Configure config.py
 brushlib_ver = brushlib_dep.name()
 
-# brushes_dir
+## brushes_dir
 opt_brushes_dir = get_option('brushes_dir')
 if opt_brushes_dir != ''
   brushes_dir = opt_brushes_dir
@@ -25,7 +25,7 @@ else
   brushes_dir = brushes_dep.get_pkgconfig_variable('brushesdir')
 endif
 
-# libmypaint_locale_dir
+## libmypaint_locale_dir
 opt_libmypaint_locale_dir = get_option('libmypaint_locale_dir')
 opt_libmypaint_locale_pkgconfig = get_option('libmypaint_locale_pkgconfig')
 brushlib_prefix = brushlib_dep.get_pkgconfig_variable('prefix')
@@ -47,7 +47,7 @@ else
   libmypaint_locale_dir = '\'' + opt_libmypaint_locale_dir + '\''
 endif
 
-# TODO supported_locales
+## TODO supported_locales
 
 conf = configuration_data()
 conf.set('brushes_dir', brushes_dir)

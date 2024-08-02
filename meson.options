@@ -8,21 +8,71 @@
 
 # /meson.options
 
+
+# config.py
 option('brushes_dir', type : 'string', description: 'use the provided argument as brush directory path')
 
 option('libmypaint_locale_dir', type : 'string',
-  description : 'set the location of the libmypaint message catalogs' +
-  'If --libmypaint-locale-path-from-pkgconf is set, using this' +
-  'flag will raise an error. If neither flag is used, or the value' +
-  'passed is the empty string, the directory used for mypaint\'s own' +
+  description : 'Set the location of the libmypaint message catalogs.\n' +
+  'If libmypaint_locale_pkgconf is true, using this ' +
+  'flag will raise an error. If neither flag is used, or the value ' +
+  'passed is the empty string, the directory used for mypaint\'s own ' +
   'locale data is used for libmypaint\'s as well.')
 
 option('libmypaint_locale_pkgconfig', type : 'boolean', value : false,
-  description: 'set the location of libmypaint\'s message catalogs using pkg-config' +
-  'The path is set to {prefix}/share/locale, where "prefix" is' +
+  description: 'Set the location of libmypaint\'s message catalogs using pkg-config.\n' +
+  'The path is set to {prefix}/share/locale, where "prefix" is ' +
   'fetched from libmypaint\'s pkg-config data.')
 
 option('translation_threshold', type : 'integer', min : 0, max : 100, value : 0,
   description : 'Limit translations to those with a completion percentage' +
   'at or above the given threshold. Argument range: [0..100]')
 
+# swig
+option('set_rpath', type : 'boolean', value : false,
+  description : '[MyPaint] Add dependency library paths from pkg-config ' +
+  'to the rpath of mypaintlib (linux/bsd only)')
+
+option('disable_openmp', type: 'boolean', value : false,
+  description : 'Don\'t use openmp, even if the platform supports it.')
+
+
+
+#        ('build-lib=', 'b', "directory for compiled extension modules"),
+#        ('build-temp=', 't', "directory for temporary files (build by-products)"),
+#        (
+#            'plat-name=',
+#            'p',
+#            "platform name to cross-compile for, if supported "
+#            f"[default: {get_platform()}]",
+#        ),
+#        (
+#            'inplace',
+#            'i',
+#            "ignore build-lib and put compiled extensions into the source "
+#            "directory alongside your pure Python modules",
+#        ),
+#        (
+#            'include-dirs=',
+#            'I',
+#            "list of directories to search for header files" + sep_by,
+#        ),
+#        ('define=', 'D', "C preprocessor macros to define"),
+#        ('undef=', 'U', "C preprocessor macros to undefine"),
+#        ('libraries=', 'l', "external C libraries to link with"),
+#        (
+#            'library-dirs=',
+#            'L',
+#            "directories to search for external C libraries" + sep_by,
+#        ),
+#        ('rpath=', 'R', "directories to search for shared C libraries at runtime"),
+#        ('link-objects=', 'O', "extra explicit link objects to include in the link"),
+#        ('debug', 'g', "compile/link with debugging information"),
+#        ('force', 'f', "forcibly build everything (ignore file timestamps)"),
+#        ('compiler=', 'c', "specify the compiler type"),
+#        ('parallel=', 'j', "number of parallel build jobs"),
+#        ('swig-cpp', None, "make SWIG create C++ files (default is C)"),
+#        ('swig-opts=', None, "list of SWIG command line options"),
+#        ('swig=', None, "path to the SWIG executable"),
+#        ('user', None, "add user include, library and rpath"),
+#    ]

@@ -13,7 +13,7 @@ project('MyPaint', 'cpp',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
 
 # Build machine info
-system_os = host_machine.system()
+host_os = host_machine.system()
 
 # Modules
 ## Python
@@ -42,6 +42,7 @@ glib_dep = dependency('glib-2.0')
 gobject_dep = dependency('gobject-2.0')
 pygobject_dep = dependency('pygobject-3.0')
 
+dep_list = [pygobject_dep, glib_dep, libpng_dep, lcms2_dep, gtk_dep, brushes_dep]
 
 subdir('src') # Configure
 
@@ -50,12 +51,4 @@ install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : tru
 install_subdir('src/lib/python', install_dir : 'lib/mypaint/lib', strip_directory : true)
 
 # Build
-#subdir('src/lib') # Swig
-## Extensions
-
-## Options
-# swig_opts=mypaintlib_swig_opts,
-# **mypaintlib_opts
-
-# Install
-#install_subdir('src/gui', install_dir : 'mypaint')
+subdir('src/lib/compiled') # Swig
