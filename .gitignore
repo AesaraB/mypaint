@@ -30,7 +30,6 @@ build
 flatpak/.flatpak-builder/
 MyPaint.egg-info
 config.log
-config.py
 
 # src/
 src/lib/config.py
