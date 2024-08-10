@@ -34,7 +34,7 @@ swig = find_program('swig', required: true)
 swig_version_cmd = run_command(swig, ['-version'], check: true) # Returns: "\nSWIG Version 4.1.1\n\nCompiled with ..."
 swig_version = swig_version_cmd.stdout().split('\n')[1].split()[2].strip()
 if swig_version.version_compare('<4.1.0')
-  swig_cmd = [swig, '-python', '-py3', '-o']
+  swig_cmd = [swig, '-python', '-py3']
 else
   swig_cmd = [swig, '-python']
 endif
