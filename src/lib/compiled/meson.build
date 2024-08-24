@@ -8,6 +8,11 @@
 
 # /src/lib/compiled/meson.build
 
+# Basic declarations
+swig = find_program('swig', required: true)
+pkgconfig = find_program('pkg-config', required: true)
+numpy_include = '-I' + run_command(numpy_include_cmd, check: true).stdout().strip()
+
 # Platform stuff
 opt_set_rpath = get_option('set_rpath')
 rpath_os = ['linux', 'freebsd', 'netbsd', 'openbsd']
@@ -28,45 +33,39 @@ if opt_set_rpath
 endif
 
 # swig configuration
-swig = find_program('swig', required: true)
 
 ## Check command version and set python opts accordingly
 # Returns: "\nSWIG Version 4.1.1\n\nCompiled with ..."
 swig_version_cmd = run_command(swig, ['-version'], check: true)
 swig_version = swig_version_cmd.stdout().split('\n')[1].split()[2].strip()
 if swig_version.version_compare('<4.1.0')
-  swig_cmd = [swig, '-python', '-py3']
+  mypaintlib_swig_args = [swig, '-python', '-py3']
 else
-  swig_cmd = [swig, '-python']
+  mypaintlib_swig_args = [swig, '-python']
 endif
 
 ## Other
-swig_cmd += ['-Wall', '-c++']
-# FIXME: Building against the new shared lib, omit old test code
-swig_cmd += ['-DNO_TESTS']
+mypaintlib_swig_args += ['-Wall', '-c++']
+mypaintlib_swig_args += ['-DNO_TESTS'] # FIXME: Building against the new shared lib, omit old test code
 
 ## Extensions
-### Numpy
-numpy_include = run_command(numpy_include_cmd, check: true).stdout()
-swig_cmd += ['-I' + numpy_include]
-
-### Other extensions
-pkgconfig_cmd = find_program('pkg-config', required: true)
-dep_cflags = run_command(pkgconfig_cmd, dep_names, ['--cflags-only-I'], check: true).stdout()
-swig_cmd += dep_cflags
+mypaintlib_swig_args += [numpy_include]
+dep_cflags = run_command(pkgconfig, dep_names, ['--cflags-only-I'], check: true).stdout().strip().split()
+mypaintlib_swig_args += dep_cflags
 
 # Run swig
 mypaintlib_swig = custom_target(
   'mypaintlib.py',
   input: ['mypaintlib.i'],
   output:  ['mypaintlib.py', 'mypaintlib_wrap.cpp'],
-  command: swig_cmd + ['-o', '@OUTPUT1@', '@INPUT0@'],
+  command: [mypaintlib_swig_args, '-o', '@OUTPUT1@', '@INPUT0@'],
   install: true,
   install_dir: ['lib/mypaint/lib', false],
   )
 
-# Other configuration
-extra_compile_args = [
+# Shared library configuration
+mypaintlib_compile_args = [
+  numpy_include,
   '--std=c++11',
   '-Wall',
   '-Wno-sign-compare',
@@ -74,11 +73,33 @@ extra_compile_args = [
   '-D_POSIX_C_SOURCE=200809L',
   '-DNO_TESTS',  # FIXME: we're building against shared libmypaint now
   '-g']  # always include symbols, for profiling
+mypaintlib_link_args = []
 
 ## Operating system
 if host_os == 'darwin'
-  extra_compile_args += ['-D_DARWIN_C_SOURCE']
-elif rpath_os.contains(host_os)
-  # Look up libraries dependencies relative to the library.
-  extra_compile_args += ['-Wl,-z,origin','-Wl,-rpath,$ORIGIN']
+  mypaintlib_compile_args += ['-D_DARWIN_C_SOURCE']
 endif
+
+mypaintlib_sources = [
+  mypaintlib_swig[1],
+  'gdkpixbuf2numpy.cpp',
+  'pixops.cpp',
+  'fastpng.cpp',
+  'brushsettings.cpp',
+  'fill/fill_common.cpp',
+  'fill/fill_constants.cpp',
+  'fill/floodfill.cpp',
+  'fill/gap_closing_fill.cpp',
+  'fill/gap_detection.cpp',
+  'fill/blur.cpp',
+  'fill/morphology.cpp']
+
+# Build shared library
+shared_library('_mypaintlib',
+  sources: mypaintlib_sources,
+  cpp_args: mypaintlib_compile_args,
+  link_args: mypaintlib_link_args,
+  dependencies: [dep_list, python_dep],
+  link_depends: mypaintlib_swig,
+  install: true,
+  install_dir: 'lib/mypaint/lib')

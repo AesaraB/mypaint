@@ -26,7 +26,7 @@ numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: t
 fs = import('fs')
 
 # Dependencies
-python_dep = py.dependency()
+python_dep = py.dependency(embed: true)
 ## First party dependencies
 brushlib_dep = dependency('libmypaint-2.0')
 brushes_dep = dependency('mypaint-brushes-2.0')
