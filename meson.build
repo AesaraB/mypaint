@@ -20,6 +20,7 @@ host_os = host_machine.system()
 py_mod = import('python')
 py_deps = ['cairo','gettext','gi','numpy']
 py = py_mod.find_installation('python3', modules: py_deps)
+numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
 
 ## Filesystem
 fs = import('fs')
@@ -42,9 +43,15 @@ glib_dep = dependency('glib-2.0')
 gobject_dep = dependency('gobject-2.0')
 pygobject_dep = dependency('pygobject-3.0')
 
-dep_list = [pygobject_dep, glib_dep, libpng_dep, lcms2_dep, gtk_dep, brushes_dep]
+## Array of extension deps
+dep_list = [brushlib_dep, pygobject_dep, glib_dep, libpng_dep, lcms2_dep, gtk_dep, brushes_dep]
+dep_names = []
+foreach dep : dep_list
+  dep_names += dep.name()
+endforeach
 
-subdir('src') # Configure
+# Configure
+subdir('src')
 
 # Setup python
 install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true)

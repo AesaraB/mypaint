@@ -31,7 +31,8 @@ endif
 swig = find_program('swig', required: true)
 
 ## Check command version and set python opts accordingly
-swig_version_cmd = run_command(swig, ['-version'], check: true) # Returns: "\nSWIG Version 4.1.1\n\nCompiled with ..."
+# Returns: "\nSWIG Version 4.1.1\n\nCompiled with ..."
+swig_version_cmd = run_command(swig, ['-version'], check: true)
 swig_version = swig_version_cmd.stdout().split('\n')[1].split()[2].strip()
 if swig_version.version_compare('<4.1.0')
   swig_cmd = [swig, '-python', '-py3']
@@ -43,10 +44,16 @@ endif
 swig_cmd += ['-Wall', '-c++']
 # FIXME: Building against the new shared lib, omit old test code
 swig_cmd += ['-DNO_TESTS']
-foreach dep in dep_list
-  swig_cmd += ['-I' + 'test']
-endforeach
 
+## Extensions
+### Numpy
+numpy_include = run_command(numpy_include_cmd, check: true).stdout()
+swig_cmd += ['-I' + numpy_include]
+
+### Other extensions
+pkgconfig_cmd = find_program('pkg-config', required: true)
+dep_cflags = run_command(pkgconfig_cmd, dep_names, ['--cflags-only-I'], check: true).stdout()
+swig_cmd += dep_cflags
 
 # Run swig
 mypaintlib_swig = custom_target(
