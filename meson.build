@@ -21,8 +21,6 @@ host_cpu_family = host_machine.cpu_family()
 py_mod = import('python')
 py_deps = ['cairo','gettext','gi','numpy']
 py = py_mod.find_installation('python3', modules: py_deps)
-numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
-
 ## Filesystem
 fs = import('fs')
 
@@ -51,12 +49,11 @@ foreach dep : dep_list
   dep_names += dep.name()
 endforeach
 
+# Helper commands
+numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
+
 # Configure
-subdir('src')
-
-# Setup python
-install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true)
-install_subdir('src/lib/python', install_dir : 'lib/mypaint/lib', strip_directory : true)
-
-# Build
-subdir('src/lib/compiled') # Swig
+subdir('src') # Configuration and main executable
+subdir('src/lib_ext') # Swig
+subdir('src/lib_pure') # Python library scripts
+subdir('src/gui') # Python GUI scripts
