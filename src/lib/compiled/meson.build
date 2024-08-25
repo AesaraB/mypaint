@@ -95,7 +95,11 @@ mypaintlib_sources = [
   'fill/morphology.cpp']
 
 # Build shared library
-shared_library('_mypaintlib',
+shared_library(
+  # The old build system produced "_mypaintlib.cpython-311-x86_64-linux-gnu.so". While we can try to match it, this is
+  # close enough
+  ['mypaintlib' + '.' + host_cpu_family + '-' + host_os],
+  name_prefix: '_',
   sources: mypaintlib_sources,
   cpp_args: mypaintlib_compile_args,
   link_args: mypaintlib_link_args,
