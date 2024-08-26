@@ -13,6 +13,4 @@ mypaint_brushdir = u'@brushes_dir@'
 libmypaint_version = u'@brushlib_ver@'
 libmypaint_locale_dir = @libmypaint_locale_dir@
 # List of locales for which translation files are available
-supported_locales = [
-@supported_locales@
-]
+supported_locales = @supported_locales@
