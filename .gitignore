@@ -30,10 +30,3 @@ build
 flatpak/.flatpak-builder/
 MyPaint.egg-info
 config.log
-
-# src/
-src/lib/config.py
-src/lib/test-python-surface
-src/lib/mypaintlib.py
-src/lib/mypaintlib_wrap.cc
-src/lib/mypaintlib_wrap.cpp
