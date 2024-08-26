@@ -19,7 +19,7 @@ host_cpu_family = host_machine.cpu_family()
 # Modules
 ## Python
 py_mod = import('python')
-py_deps = ['cairo','gettext','gi','numpy']
+py_deps = ['cairo','gettext','gi','numpy', 'polib']
 py = py_mod.find_installation('python3', modules: py_deps)
 ## Filesystem
 fs = import('fs')
@@ -50,6 +50,7 @@ foreach dep : dep_list
 endforeach
 
 # Helper commands
+linguas_cmd = find_program('build-aux/meson/get_locales.py', required: true)
 numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
 
 # Configure

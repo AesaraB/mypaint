@@ -47,13 +47,15 @@ else
   libmypaint_locale_dir = '\'' + opt_libmypaint_locale_dir + '\''
 endif
 
-## TODO supported_locales
+## Supported locales
+opt_translation_threshold = get_option('translation_threshold')
+supported_locales = run_command(linguas_cmd, ['../data/po/', opt_translation_threshold.to_string()], check: true).stdout().strip()
 
 conf = configuration_data()
 conf.set('brushes_dir', brushes_dir)
 conf.set('brushlib_ver', brushlib_ver)
 conf.set('libmypaint_locale_dir', libmypaint_locale_dir)
-conf.set('supported_locales', 'locstring')
+conf.set('supported_locales', supported_locales)
 
 configure_file(
   encoding : 'utf-8',
