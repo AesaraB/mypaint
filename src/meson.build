@@ -1,10 +1,9 @@
 # This file is part of MyPaint.
 # Copyright (C) 2024 the MyPaint project
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
+# version.
 
 # /src/meson.build
 
@@ -48,9 +47,10 @@ else
 endif
 
 ## Supported locales
-opt_translation_threshold = get_option('translation_threshold')
-supported_locales = run_command(linguas_cmd, ['../data/po/', opt_translation_threshold.to_string()], check: true).stdout().strip()
+opt_translation_threshold = get_option('translation_threshold').to_string()
+supported_locales = run_command(linguas_cmd, ['../data/po/', opt_translation_threshold], check: true).stdout().strip()
 
+# Configure the file
 conf = configuration_data()
 conf.set('brushes_dir', brushes_dir)
 conf.set('brushlib_ver', brushlib_ver)
