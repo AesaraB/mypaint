@@ -56,5 +56,5 @@ numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: t
 # Configure
 subdir('src') # Configuration and main executable
 subdir('src/lib_ext') # Swig
-subdir('src/lib_pure') # Python library scripts
-subdir('src/gui') # Python GUI scripts
+install_subdir('src/lib_pure', install_dir : 'lib/mypaint/lib', strip_directory : true) # Python library scripts
+install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true) # Python GUI scripts
