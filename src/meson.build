@@ -61,5 +61,5 @@ configure_file(
   encoding : 'utf-8',
   input : 'config.py.in',
   output : 'config.py',
-  install_dir : 'lib/mypaint/lib',
+  install_dir : purelibdir + '/lib',
   configuration : conf)

@@ -1,10 +1,9 @@
 # This file is part of MyPaint.
 # Copyright (C) 2024 the MyPaint project
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
+# version.
 
 # /meson.build
 
@@ -15,6 +14,19 @@ project('MyPaint', 'cpp',
 # Build machine info
 host_os = host_machine.system()
 host_cpu_family = host_machine.cpu_family()
+
+## Install directories
+project_subdir = '/' + meson.project_name().to_lower()
+platlibdir = get_option('libdir') + project_subdir
+opt_purelibdir = get_option('libdir_noarch')
+if opt_purelibdir == ''
+  purelibdir = platlibdir
+else
+  purelibdir = opt_purelibdir + project_subdir
+endif
+bindir = get_option('bindir')
+datadir = get_option('datadir')
+localedir = get_option('localedir')
 
 # Modules
 ## Python
@@ -29,7 +41,6 @@ python_dep = py.dependency(embed: true)
 ## First party dependencies
 brushlib_dep = dependency('libmypaint-2.0')
 brushes_dep = dependency('mypaint-brushes-2.0')
-
 ## Third party dependencies
 cairo_dep = dependency('cairo', version: '>=1.4')
 lcms2_dep = dependency('lcms2')
@@ -56,5 +67,5 @@ numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: t
 # Configure
 subdir('src') # Configuration and main executable
 subdir('src/lib_ext') # Swig
-install_subdir('src/lib_pure', install_dir : 'lib/mypaint/lib', strip_directory : true) # Python library scripts
-install_subdir('src/gui', install_dir : 'lib/mypaint/gui', strip_directory : true) # Python GUI scripts
+install_subdir('src/lib_pure', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
+install_subdir('src/gui', install_dir : purelibdir + '/gui', strip_directory : true) # Python GUI scripts

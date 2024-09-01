@@ -60,7 +60,7 @@ mypaintlib_swig = custom_target(
   output:  ['mypaintlib.py', 'mypaintlib_wrap.cpp'],
   command: [mypaintlib_swig_args, '-o', '@OUTPUT1@', '@INPUT0@'],
   install: true,
-  install_dir: ['lib/mypaint/lib', false],
+  install_dir: [platlibdir + '/lib', false],
   )
 
 # Shared library configuration
@@ -71,8 +71,8 @@ mypaintlib_compile_args = [
   '-Wno-sign-compare',
   '-Wno-write-strings',
   '-D_POSIX_C_SOURCE=200809L',
-  '-DNO_TESTS',  # FIXME: we're building against shared libmypaint now
   '-g']  # always include symbols, for profiling
+mypaintlib_compile_args += ['-DNO_TESTS']  # FIXME: we're building against shared libmypaint now
 mypaintlib_link_args = []
 
 ## Operating system
@@ -106,4 +106,4 @@ shared_library(
   dependencies: [dep_list, python_dep],
   link_depends: mypaintlib_swig,
   install: true,
-  install_dir: 'lib/mypaint/lib')
+  install_dir: platlibdir + '/lib')
