@@ -4,10 +4,10 @@
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
 # License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
 # version.
-
+#
 # /src/meson.build
 
-# Configure config.py
+# Configure config.py.in
 brushlib_ver = brushlib_dep.name()
 
 ## brushes_dir
@@ -50,16 +50,50 @@ endif
 opt_translation_threshold = get_option('translation_threshold').to_string()
 supported_locales = run_command(linguas_cmd, ['../data/po/', opt_translation_threshold], check: true).stdout().strip()
 
-# Configure the file
-conf = configuration_data()
-conf.set('brushes_dir', brushes_dir)
-conf.set('brushlib_ver', brushlib_ver)
-conf.set('libmypaint_locale_dir', libmypaint_locale_dir)
-conf.set('supported_locales', supported_locales)
+## Configure the file
+main_config = configuration_data()
+main_config.set('brushes_dir', brushes_dir)
+main_config.set('brushlib_ver', brushlib_ver)
+main_config.set('libmypaint_locale_dir', libmypaint_locale_dir)
+main_config.set('supported_locales', supported_locales)
 
 configure_file(
   encoding : 'utf-8',
   input : 'config.py.in',
   output : 'config.py',
-  install_dir : purelibdir + '/lib',
-  configuration : conf)
+  configuration : main_config,
+  install_dir : purelibdir + '/lib')
+
+# Configure binaries
+python_path = python.path()
+rel_bindir = fs.relative_to(bindir, bindir) # This is literally pointless, but it mimics the distutils' behaviour
+rel_datadir = fs.relative_to(datadir, bindir)
+rel_includedir = fs.relative_to(includedir, bindir)
+rel_platlibdir = fs.relative_to(platlibdir, bindir)
+rel_purelibdir = fs.relative_to(purelibdir, bindir)
+
+binary_config = configuration_data()
+binary_config.set('python_path', '!' + python_path) # prepend the '!' to make the comment a shebang
+binary_config.set('os_bindir', rel_bindir)
+binary_config.set('os_datadir', rel_datadir)
+binary_config.set('os_includedir', rel_includedir)
+binary_config.set('platlibdir', rel_platlibdir)
+binary_config.set('purelibdir', rel_purelibdir)
+
+# mypaint.py.in
+configure_file(
+  encoding : 'utf-8',
+  input : 'mypaint.py.in',
+  output : 'mypaint',
+  configuration : binary_config,
+  install_dir : bindir,
+  install_mode: 'rwxr-xr-x')
+
+# mypaint-ora-thumbnailer.py.in
+configure_file(
+  encoding : 'utf-8',
+  input : 'mypaint-ora-thumbnailer.py.in',
+  output : 'mypaint-ora-thumbnailer',
+  configuration : binary_config,
+  install_dir : bindir,
+  install_mode: 'rwxr-xr-x')

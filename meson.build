@@ -4,8 +4,8 @@
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
 # License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
 # version.
-
-# /meson.build
+#
+# /meson.build -- The root buildfile for Meson
 
 project('MyPaint', 'cpp',
   version : 'v2.1.0',
@@ -26,18 +26,20 @@ else
 endif
 bindir = get_option('bindir')
 datadir = get_option('datadir')
+project_datadir = datadir + project_subdir
 localedir = get_option('localedir')
+includedir = get_option('includedir')
 
 # Modules
 ## Python
-py_mod = import('python')
-py_deps = ['cairo','gettext','gi','numpy', 'polib']
-py = py_mod.find_installation('python3', modules: py_deps)
+python_mod = import('python')
+python_deps = ['cairo','gettext','gi','numpy', 'polib']
+python = python_mod.find_installation('python3', modules: python_deps)
 ## Filesystem
 fs = import('fs')
 
 # Dependencies
-python_dep = py.dependency(embed: true)
+python_dep = python.dependency(embed: true)
 ## First party dependencies
 brushlib_dep = dependency('libmypaint-2.0')
 brushes_dep = dependency('mypaint-brushes-2.0')
@@ -64,8 +66,8 @@ endforeach
 linguas_cmd = find_program('build-aux/meson/get_locales.py', required: true)
 numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
 
-# Configure
-subdir('src') # Configuration and main executable
-subdir('src/lib_ext') # Swig
+# Build & configure
+subdir('src') # Configuration and binaries
+subdir('src/lib_ext') # Build C++ extension
 install_subdir('src/lib_pure', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
 install_subdir('src/gui', install_dir : purelibdir + '/gui', strip_directory : true) # Python GUI scripts
