@@ -28,9 +28,9 @@ import re
 import logging
 
 ## Variables configured at buildtime
-MYPAINT_VERSION_BASE='2.1.0-alpha'
-MYPAINT_VERSION_FORMAL='2.1.0-alpha'
-MYPAINT_VERSION_CEREMONIAL='2.1.0-alpha+git.8187b1e2'
+MYPAINT_VERSION_BASE='@mypaint_version_base@'
+MYPAINT_VERSION_FORMAL='@mypaint_version_formal@'
+MYPAINT_VERSION_CEREMONIAL='@mypaint_version_ceremonial@'
 
 MYPAINT_DIR_PATHS = {
     'data': '@os_datadir@',

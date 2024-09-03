@@ -8,8 +8,35 @@
 # /meson.build -- The root buildfile for Meson
 
 project('MyPaint', 'cpp',
-  version : 'v2.1.0',
+  version : '2.1.0-alpha',
   default_options : ['warning_level=3', 'cpp_std=c++14'])
+
+# Lint version number
+ver_prerel_valid = ['', 'alpha', 'beta', 'rc']
+ver_full = meson.project_version().split('.')
+ver_major = ver_full[0]
+ver_minor = ver_full[1]
+
+## Find patch and prerelease values
+if ver_full[2].contains('-')
+  ver_patch_prerel = ver_full[2].split('-')
+  ver_patch = ver_patch_prerel[0]
+  ver_prerel = ver_patch_prerel[1]
+else
+  ver_patch = ver_full[2]
+  ver_prerel = ''
+endif
+
+## Find prerelease number (if any)
+if ver_full.length() == 4 and ver_prerel != ''
+  ver_prerel_num = ver_full[3]
+else
+  ver_prerel_num = '0'
+endif
+
+if not ver_prerel_valid.contains(ver_prerel)
+  error('Invalid prerelease type: ' + ver_prerel)
+endif
 
 # Build machine info
 host_os = host_machine.system()
@@ -63,8 +90,9 @@ foreach dep : dep_list
 endforeach
 
 # Helper commands
-linguas_cmd = find_program('build-aux/meson/get_locales.py', required: true)
-numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: true)
+git = find_program('git', required : true)
+linguas_cmd = find_program('build-aux/meson/get_locales.py', required : true)
+numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required : true)
 
 # Build & configure
 subdir('src') # Configuration and binaries

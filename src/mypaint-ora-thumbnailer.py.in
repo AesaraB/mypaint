@@ -30,6 +30,11 @@ import zipfile
 
 import gi
 
+## Variables configured at buildtime
+MYPAINT_VERSION_BASE='@mypaint_version_base@'
+MYPAINT_VERSION_FORMAL='@mypaint_version_formal@'
+MYPAINT_VERSION_CEREMONIAL='@mypaint_version_ceremonial@'
+
 MYPAINT_DIR_PATHS = {
     'data': '@os_datadir@',
     'headers': '@os_includedir@',
