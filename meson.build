@@ -68,7 +68,7 @@ numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required: t
 
 # Build & configure
 subdir('src') # Configuration and binaries
-subdir('src/lib_ext') # Build C++ extension
-install_subdir('src/lib_pure', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
+subdir('src/platlib') # Build C++ extension
+install_subdir('src/purelib', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
 install_subdir('src/gui', install_dir : purelibdir + '/gui', strip_directory : true) # Python GUI scripts
 subdir('data') # Data files & translations
