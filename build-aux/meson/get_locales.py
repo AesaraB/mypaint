@@ -21,7 +21,7 @@ locales = [locale[:-3] for locale in os.listdir(locale_dir) if locale.endswith('
 translation_threshold = float(sys.argv[2]) / float(100)
 
 if translation_threshold == 0:
-    print(locales)
+    print(*locales, sep=' ')
 else:
     template_path = os.path.join(locale_dir, "mypaint.pot")
     total = len(polib.pofile(template_path))
@@ -36,4 +36,4 @@ else:
         locale_completion[locale] = total
 
     good_locales = [k for k, v in locale_completion.items() if (v / total) >= translation_threshold]
-    print(good_locales)
+    print(*good_locales, sep=' ')

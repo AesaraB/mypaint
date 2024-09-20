@@ -94,9 +94,14 @@ git = find_program('git', required : true)
 linguas_cmd = find_program('build-aux/meson/get_locales.py', required : true)
 numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required : true)
 
+## Supported locales
+opt_translation_threshold = get_option('translation_threshold').to_string()
+supported_locales = run_command(linguas_cmd, ['data/po', opt_translation_threshold], check: true).stdout().strip().split( )
+
 # Build & configure
 subdir('src') # Configuration and binaries
 subdir('src/platlib') # Build C++ extension
 install_subdir('src/purelib', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
 install_subdir('src/gui', install_dir : purelibdir + '/gui', strip_directory : true) # Python GUI scripts
 subdir('data') # Data files & translations
+subdir('data/po') # Translations
