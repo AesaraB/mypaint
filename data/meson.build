@@ -18,6 +18,3 @@ install_subdir('pixmaps', install_dir : project_datadir, strip_directory : false
 install_data('desktop/mypaint.desktop', install_dir : datadir + '/applications')
 install_data('desktop/mypaint.appdata.xml', install_dir : datadir + '/metainfo')
 install_data('desktop/mypaint-ora.thumbnailer', install_dir : datadir + '/thumbnailers')
-
-# Translations
-#src('po')
