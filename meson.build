@@ -43,16 +43,16 @@ host_os = host_machine.system()
 
 ## Install directories
 project_subdir = '/' + meson.project_name().to_lower()
-platlibdir = get_option('libdir') + project_subdir
+platlibdir = get_option('libdir') / project_subdir
 opt_purelibdir = get_option('libdir_noarch')
 if opt_purelibdir == ''
   purelibdir = platlibdir
 else
-  purelibdir = opt_purelibdir + project_subdir
+  purelibdir = opt_purelibdir / project_subdir
 endif
 bindir = get_option('bindir')
 datadir = get_option('datadir')
-project_datadir = datadir + project_subdir
+project_datadir = datadir / project_subdir
 localedir = get_option('localedir')
 includedir = get_option('includedir')
 
