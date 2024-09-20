@@ -40,7 +40,6 @@ endif
 
 # Build machine info
 host_os = host_machine.system()
-host_cpu_family = host_machine.cpu_family()
 
 ## Install directories
 project_subdir = '/' + meson.project_name().to_lower()
