@@ -63,6 +63,8 @@ python_deps = ['cairo','gettext','gi','numpy', 'polib']
 python = python_mod.find_installation('python3', modules: python_deps)
 ## Filesystem
 fs = import('fs')
+## i18n
+i18n = import('i18n')
 
 # Dependencies
 python_dep = python.dependency(embed: true)
@@ -102,5 +104,5 @@ subdir('src') # Configuration and binaries
 subdir('src/platlib') # Build C++ extension
 install_subdir('src/purelib', install_dir : purelibdir + '/lib', strip_directory : true) # Python library scripts
 install_subdir('src/gui', install_dir : purelibdir + '/gui', strip_directory : true) # Python GUI scripts
-subdir('data') # Data files & translations
+subdir('data') # Data files
 subdir('data/po') # Translations
