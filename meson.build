@@ -8,8 +8,7 @@
 # /meson.build -- The root buildfile for Meson
 
 project('MyPaint', 'cpp',
-  version : '2.1.0-alpha',
-  default_options : ['warning_level=3', 'cpp_std=c++14'])
+  version : '2.1.0-alpha')
 
 # Lint version number
 ver_prerel_valid = ['', 'alpha', 'beta', 'rc']
@@ -93,7 +92,9 @@ endforeach
 # Helper commands
 git = find_program('git', required : true)
 linguas_cmd = find_program('build-aux/meson/get_locales.py', required : true)
-numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required : true)
+numpy_include_cmd = find_program('build-aux/meson/numpy_include.py', required : true) # FIXME: meson issue #9598
+pkgconfig = find_program('pkg-config', required: true)
+swig = find_program('swig', required: true)
 
 ## Supported locales
 opt_translation_threshold = get_option('translation_threshold').to_string()

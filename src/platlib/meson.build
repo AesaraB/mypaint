@@ -9,28 +9,7 @@
 # /src/lib_ext/meson.build
 
 # Basic declarations
-swig = find_program('swig', required: true)
-pkgconfig = find_program('pkg-config', required: true)
 numpy_include = '-I' + run_command(numpy_include_cmd, check: true).stdout().strip()
-
-# Platform stuff
-opt_set_rpath = get_option('set_rpath')
-rpath_os = ['linux', 'freebsd', 'netbsd', 'openbsd']
-
-if opt_set_rpath
-  if (rpath_os.contains(host_os))
-    error('Testing') #TODO
-  else
-    error('Option set_rpath is active but host machine not linux/bsd')
-  endif
-  # The directories in runtime_library_dirs will be added to the linker
-  # args as '-Wl,-R{dirs}' This _should_ be compatible with the --rpath=
-  # build_ext option
-  #for ext in self.extensions:
-      #rt_libs = uniq(ext.library_dirs + ext.runtime_library_dirs)
-      # Retain original list reference, just in case
-      #ext.runtime_library_dirs[:] = rt_libs
-endif
 
 # swig configuration
 
@@ -67,11 +46,11 @@ mypaintlib_swig = custom_target(
 mypaintlib_compile_args = [
   numpy_include,
   '--std=c++11',
-  '-Wall',
+  '-Wall', # FIXME: this is duplicated in the final command
   '-Wno-sign-compare',
   '-Wno-write-strings',
   '-D_POSIX_C_SOURCE=200809L',
-  '-g']  # always include symbols, for profiling
+  '-g']  # always include symbols, for profiling, FIXME: this is duplicated in the final command.
 mypaintlib_compile_args += ['-DNO_TESTS']  # FIXME: we're building against shared libmypaint now
 mypaintlib_link_args = []
 
@@ -93,6 +72,29 @@ mypaintlib_sources = [
   'fill/gap_detection.cpp',
   'fill/blur.cpp',
   'fill/morphology.cpp']
+
+## openmp
+## macOS doesn't ship with openmp by default, but there should be ways to work around it
+## https://mac.r-project.org/openmp/
+if not get_option('disable_openmp') and host_os != 'darwin'
+  mypaintlib_compile_args += get_option('openmp_cflag')
+  mypaintlib_link_args += get_option('openmp_ldflag')
+endif
+
+## Optimisations
+if get_option('use_optimisations')
+  optimised_builds = ['debugoptimized', 'release']
+  if optimised_builds.contains(get_option('buildtype')) or get_option('debug_optimisations')
+    mypaintlib_compile_args += [
+      '-Ofast',
+      '-ftree-vectorize',
+      '-fopt-info-vec-optimized',
+      '-march=native',
+      '-mtune=native',
+      '-funsafe-math-optimizations',
+      '-funsafe-loop-optimizations']
+  endif
+endif
 
 # Build shared library
 shared_library(
