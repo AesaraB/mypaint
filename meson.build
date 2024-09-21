@@ -42,7 +42,7 @@ endif
 host_os = host_machine.system()
 
 ## Install directories
-project_subdir = '/' + meson.project_name().to_lower()
+project_subdir = meson.project_name().to_lower()
 platlibdir = get_option('libdir') / project_subdir
 opt_purelibdir = get_option('libdir_noarch')
 if opt_purelibdir == ''
